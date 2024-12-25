@@ -1,18 +1,13 @@
 function FindProxyForURL(url, host) {
-    // 判断是否为指定域名
-    if (shExpMatch(host, "5.sirkey.v6.army")) {
-        // 检测服务器连接
-        var server = "192.168.1.6:10808"; // 替换为你的服务器地址和端口
-        try {
-            var xhr = new XMLHttpRequest();
-            xhr.open('HEAD', 'http://' + server, false);
-            xhr.send();
-            if (xhr.status == 200) {
-                return "PROXY " + server; // 连接良好，使用服务器代理
-            }
-        } catch (e) {}
+    var proxyServer = "PROXY 192.168.1.6:10808";
+    var local = "DIRECT";
+
+    // 测试代理服务器的连接性
+    var proxyTestURL = "http://example.com/test";
+    if (isInNet(dnsResolve(proxyTestURL), "0.0.0.0", "255.255.255.255")) {
+        return proxyServer;
     }
 
-    // 服务器连接不良或非指定域名，使用直接连接
-    return "DIRECT";
+    // 若代理服务器不可用，则使用本地网络
+    return local;
 }
